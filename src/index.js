@@ -54,7 +54,7 @@ function renderCountryList(countries) {
     `
     )
     .join('');
-  countryList.innerHTML = `<ul>${html}</ul>`;
+  countryList.innerHTML = `${html}`;
 }
 
 function fetchCountryInfo(countryName) {
