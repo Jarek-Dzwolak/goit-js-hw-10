@@ -20,4 +20,11 @@ body {
 }
 .country-list {
   list-style: none;
+  font-size: 50px;
+}
+.country-serach {
+  width: 50px;
+}
+.country-info {
+  font-size: 50px;
 }

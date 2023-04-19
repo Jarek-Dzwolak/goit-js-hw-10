@@ -1,14 +1,15 @@
 import './css/styles.css';
 
 const DEBOUNCE_DELAY = 300;
-
 import { fetchCountries } from './fetchCountries.js';
+import debounce from 'lodash.debounce';
+import Notiflix from 'notiflix';
 
 const searchBox = document.getElementById('search-box');
 const countryList = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
 
-searchBox.addEventListener('input', event => {
+const searchCountries = debounce(event => {
   const searchText = event.target.value.trim();
   if (searchText === '') {
     countryList.innerHTML = '';
@@ -27,21 +28,27 @@ searchBox.addEventListener('input', event => {
       } else {
         countryList.innerHTML = '';
         countryInfo.innerHTML = '';
+        Notiflix.Notify.info(
+          'Too many matches found. Please enter a more specific name.'
+        );
       }
     })
     .catch(error => {
       console.log(error);
       countryList.innerHTML = '';
       countryInfo.innerHTML = '';
+      Notiflix.Notify.failure('Oops! Something went wrong.');
     });
-});
+}, 300);
+
+searchBox.addEventListener('input', searchCountries);
 
 function renderCountryList(countries) {
   const html = countries
     .map(
       country => `
-      <li>
-        <img width="50px"  src="${country.flags.svg}" alt="${country.name.official} flag">
+      <li class="country-list">
+        <img class="country-serach"  src="${country.flags.svg}" alt="${country.name.official} flag">
         <span>${country.name.official}</span>
       </li>
     `
@@ -52,7 +59,12 @@ function renderCountryList(countries) {
 
 function fetchCountryInfo(countryName) {
   fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
-    .then(response => response.json())
+    .then(response => {
+      if (response.status === 404) {
+        throw new Error('Country not found');
+      }
+      return response.json();
+    })
     .then(data => {
       const country = data[0];
       const languages = Array.isArray(country.languages)
@@ -71,7 +83,11 @@ function fetchCountryInfo(countryName) {
     })
     .catch(error => {
       console.log(error);
+      if (error.message === 'Country not found') {
+        Notiflix.Notify.info('Oops, there is no country with that name');
+      } else {
+        Notiflix.Notify.failure('Oops! Something went wrong.');
+      }
       countryInfo.innerHTML = '';
     });
 }
-console.log(country.languages);
