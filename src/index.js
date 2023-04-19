@@ -37,7 +37,7 @@ const searchCountries = debounce(event => {
       console.log(error);
       countryList.innerHTML = '';
       countryInfo.innerHTML = '';
-      Notiflix.Notify.failure('Oops! Something went wrong.');
+      Notiflix.Notify.failure('Oops, there is no country with that name');
     });
 }, 300);
 
@@ -80,13 +80,5 @@ function fetchCountryInfo(countryName) {
       } flag" width="200">
       `;
       countryInfo.innerHTML = html;
-    })
-    .catch(error => {
-      if (error.message === 'Country not found') {
-        Notiflix.Notify.failure('Oops, there is no country with that name');
-      } else {
-        Notiflix.Notify.failure('Oops! Something went wrong.');
-      }
-      countryInfo.innerHTML = '';
     });
 }
