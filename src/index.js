@@ -82,9 +82,8 @@ function fetchCountryInfo(countryName) {
       countryInfo.innerHTML = html;
     })
     .catch(error => {
-      console.log(error);
       if (error.message === 'Country not found') {
-        Notiflix.Notify.info('Oops, there is no country with that name');
+        Notiflix.Notify.failure('Oops, there is no country with that name');
       } else {
         Notiflix.Notify.failure('Oops! Something went wrong.');
       }
