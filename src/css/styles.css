@@ -21,6 +21,7 @@ body {
 .country-list {
   list-style: none;
   font-size: 50px;
+  padding-left: 0;
 }
 .country-serach {
   width: 50px;
